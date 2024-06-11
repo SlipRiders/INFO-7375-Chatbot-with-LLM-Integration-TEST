@@ -51,7 +51,7 @@ if st.button('Query'):
         if validate_algorithm_name(user_query):
             # if the algorithm is valid, get the algorithm description
             answer = get_algorithm_description(user_query)
-            st.text(answer)  # show the template
+            st.code(answer)  # show the template
         else:
             st.error("Alorithm not found. Please input a valid algorithm name.")
     else:
