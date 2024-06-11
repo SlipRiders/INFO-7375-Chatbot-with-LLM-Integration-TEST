@@ -1,29 +1,63 @@
+
 import streamlit as st
+import openai
+import os
 
-# 标题
-st.title('简单文档处理与问答系统')
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# 文件上传
-uploaded_files = st.file_uploader("上传你的文件", type=["pdf", "docx"], accept_multiple_files=True)
+def validate_algorithm_name(query):
+    # validate the algorithm name
+    conversation = [
+        {"role": "system",
+         "content": "You are a knowledgeable assistant well-versed in computer science. Determine if the following is a recognized algorithm, Please respond in English only:"},
+        {"role": "user", "content": query}
+    ]
 
-# 处理上传的文件
-if uploaded_files:
-    for uploaded_file in uploaded_files:
-        bytes_data = uploaded_file.read()
-        st.write(f"文件名: {uploaded_file.name}")
-        # 这里可以添加更多的文件处理逻辑，比如读取文件内容等
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=conversation,
+        max_tokens=50
+    )
 
-# 用户输入问题
-user_query = st.text_input("请输入你的问题：")
+    # JUDGE THE RESPONSE
+    return "yes" in response.choices[0].message.content.lower()
 
-# 模拟回答
-if st.button('获取答案'):
+def get_algorithm_description(query):
+    # Constructing the chat-like prompt
+    conversation = [
+        {"role": "system",
+         "content": "You are a knowledgeable assistant well-versed in computer science, particularly in algorithms. Answer the code template for the following algorithm(JAVA VERSION), Please respond in English only:"},
+        {"role": "user", "content": query}
+    ]
+
+    # Using the Chat Completion API
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=conversation,
+        max_tokens=1000
+    )
+    return response.choices[0].message.content
+
+# set the title of the web app
+st.title('ACM Alogorithm Template Query System')
+
+# input the query
+user_query = st.text_input("Input your algorithm query here:")
+
+# if the user clicks the button, show the answer
+if st.button('Query'):
     if user_query:
-        st.write(f"这是对‘{user_query}’的回答，暂时是静态的。")
+        # Validate the algorithm name
+        if validate_algorithm_name(user_query):
+            # if the algorithm is valid, get the algorithm description
+            answer = get_algorithm_description(user_query)
+            st.text(answer)  # show the template
+        else:
+            st.error("Alorithm not found. Please input a valid algorithm name.")
     else:
-        st.warning("请输入一个问题。")
+        st.error("Input a valid algorithm name.")
 
-# 清除按钮
-if st.button('清除历史'):
+# restart and clean cache
+if st.button('clear cache'):
     st.caching.clear_cache()
     st.experimental_rerun()
