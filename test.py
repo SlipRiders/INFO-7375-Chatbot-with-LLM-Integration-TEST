@@ -26,7 +26,7 @@ def get_algorithm_description(query):
     # Constructing the chat-like prompt
     conversation = [
         {"role": "system",
-         "content": "You are a knowledgeable assistant well-versed in computer science, particularly in algorithms. Answer the code template for the following algorithm(JAVA VERSION), Please respond in English only:"},
+         "content": "You are a knowledgeable assistant well-versed in computer science, particularly in algorithms. Answer the code template for the following algorithm(JAVA VERSION), Please respond in English only,Just reply to me with the code, your other words can be written in the form of comments:"},
         {"role": "user", "content": query}
     ]
 
