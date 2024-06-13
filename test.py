@@ -59,5 +59,5 @@ if st.button('Query'):
 
 # restart and clean cache
 if st.button('clear cache'):
-    st.caching.clear_cache()
+    st.cache_data.clear()
     st.experimental_rerun()
