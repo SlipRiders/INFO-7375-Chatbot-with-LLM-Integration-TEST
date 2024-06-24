@@ -1,5 +1,5 @@
 # ACM Algorithm Template Query System
-
+Name:Xiaoyang chen INFO7375 Assignment
 This repository contains a Streamlit-based web application that allows users to query for algorithm templates. The application uses OpenAI's GPT-3.5-turbo model to validate algorithm names and provide code templates in Java.
 
 ## Features
